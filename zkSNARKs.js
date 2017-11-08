@@ -1,70 +1,19 @@
-// source: https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/
-const BigNumber = require('big-number');
+var NodeRSA = require('node-rsa');
+var key = new NodeRSA({b: 512});
 
+// the transactions
+var pre_tx = 'sndr:10, recvr:0'
+var post_tx  = 'sndr:0, recvr:10'
 
-//private key must be prime numbers 
-// IS THIS THE TOXIC WASTE??
-const p = 17
-const q = 19
+// encrypted transactions
+var encrypted_pre_tx = parseInt(key.encrypt(pre_tx, 'hex'), 16)
+var encrypted_post_tx = parseInt(key.encrypt(post_tx, 'hex'), 16)
 
-//public key
-const n = p * q
-const e = 7       // a some random prime between 1 and (n-1)
+console.log('encrypted_pre_tx: ',  encrypted_pre_tx)
+console.log('encrypted_pre_tx: ',  encrypted_post_tx)
 
-
-
-
-
-// ======= PROOVE I KNOW message1 AND message2 WITHOUT SHOWING IT =======
-const message1 = 4 // or message1 can be '{senderBalance: 10, recieverBalance: 0}'
-const message2 = 3 // or message2 can be '{senderBalance: 0, recieverBalance: 10}'
-
-
-
-
-
-
-// ======= ENCRYPT THE MESSAGE =======
-// encryptedMessage1
-const encryptedMessage1 = RSA_Encrypt(message1)
-console.log('encryptedMessage = ', encryptedMessage1)
-
-// encryptedMessage2
-const encryptedMessage2 = RSA_Encrypt(message2)
-console.log('encryptedMessage = ', encryptedMessage2)
-
-// multiply encrypted messages
-const multipliedEncryptedMessage = encryptedMessage1 * encryptedMessage2
-console.log('multipliedEncryptedMessage = ', multipliedEncryptedMessage)
-
-
-
-// ======= 'MINER' RECIEVES MESSAGE AND VERIFIES THE MATH ======= 
-const randomInt = Math.floor(Math.random() * 10)
-// THE ZERO KNOWLEDGE PROOF (a * b) % n ≡ c % n 
-if ( encryptedMessage1 * encryptedMessage2 % randomInt === multipliedEncryptedMessage % randomInt ) {
-	console.log('sender knows the message!'.toUpperCase())
+// (a b) % n ≡ c % n
+var n = Math.round(Math.random() * 10)
+if ( (encrypted_pre_tx * encrypted_post_tx) % n === encrypted_pre_tx * encrypted_post_tx % n) {
+	console.log('ZERO KNOWLEDGE PROOFED!')
 }
-
-
-
-
-
-
-
-function RSA_Encrypt (message) {
-	const encryptedMessage = Math.pow(message,e) % n
-	return encryptedMessage
-}
-
-function RSA_Decrypt (encryptedMessage) {
-	let d = 1
-	while ( (e * d) % ((p-1)*(q-1)) !== 1 ){
-		d++
-	}
-	const decryptedMessage = BigNumber(encryptedMessage).pow(d).mod(n)
-	return Number(decryptedMessage.number.reverse().join(''))
-}
-
-
-
