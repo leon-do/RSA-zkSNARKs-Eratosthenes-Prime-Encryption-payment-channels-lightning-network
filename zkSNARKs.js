@@ -1,8 +1,9 @@
+// source: https://blog.ethereum.org/2016/12/05/zksnarks-in-a-nutshell/
 const BigNumber = require('big-number');
 
 
-
-//private key must be prime numbers
+//private key must be prime numbers 
+// IS THIS THE TOXIC WASTE??
 const p = 17
 const q = 19
 
@@ -14,22 +15,22 @@ const e = 7       // a some random prime between 1 and (n-1)
 
 
 
-// ======= PROOVE I KNOW ANSWER1 AND ANSWER2 WITHOUT SHOWING IT =======
-const answer1 = 4
-const answer2 = 3
+// ======= PROOVE I KNOW message1 AND message2 WITHOUT SHOWING IT =======
+const message1 = 4 // or message1 can be '{senderBalance: 10, recieverBalance: 0}'
+const message2 = 3 // or message2 can be '{senderBalance: 0, recieverBalance: 10}'
 
 
 
 
 
 
-// ======= I ENCRYPT THE MESSAGE =======
+// ======= ENCRYPT THE MESSAGE =======
 // encryptedMessage1
-const encryptedMessage1 = RSA_Encrypt(answer1)
+const encryptedMessage1 = RSA_Encrypt(message1)
 console.log('encryptedMessage = ', encryptedMessage1)
 
 // encryptedMessage2
-const encryptedMessage2 = RSA_Encrypt(answer2)
+const encryptedMessage2 = RSA_Encrypt(message2)
 console.log('encryptedMessage = ', encryptedMessage2)
 
 // multiply encrypted messages
@@ -38,11 +39,11 @@ console.log('multipliedEncryptedMessage = ', multipliedEncryptedMessage)
 
 
 
-// ======= USER RECIEVES MESSAGE AND CHECK IF I KNOW THE ANSWER ======= 
+// ======= 'MINER' RECIEVES MESSAGE AND VERIFIES THE MATH ======= 
 const randomInt = Math.floor(Math.random() * 10)
 // THE ZERO KNOWLEDGE PROOF (a * b) % n ≡ c % n 
 if ( encryptedMessage1 * encryptedMessage2 % randomInt === multipliedEncryptedMessage % randomInt ) {
-	console.log('sender knows the answer'.toUpperCase())
+	console.log('sender knows the message!'.toUpperCase())
 }
 
 
@@ -61,9 +62,7 @@ function RSA_Decrypt (encryptedMessage) {
 	while ( (e * d) % ((p-1)*(q-1)) !== 1 ){
 		d++
 	}
-
 	const decryptedMessage = BigNumber(encryptedMessage).pow(d).mod(n)
-
 	return Number(decryptedMessage.number.reverse().join(''))
 }
 
