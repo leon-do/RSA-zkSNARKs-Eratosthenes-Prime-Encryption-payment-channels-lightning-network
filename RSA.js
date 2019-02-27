@@ -7,6 +7,7 @@ const q = 19
 //public info
 const n = p * q
 const e = 7 	
+	// https://brilliant.org/wiki/relatively-prime/
 	// e is an integer
 	// e is not not a factor of n
 	// 1 < e < (p-1)(q-1)
