@@ -31,6 +31,8 @@ console.log(d) // 247
 //decrypt message
 // 13^247 % 323
 const decryptedMessage = BigNumber(encryptedMessage).pow(d).mod(n)
+
+// 72
 console.log(Number(decryptedMessage.number.reverse().join('')))
 
 
