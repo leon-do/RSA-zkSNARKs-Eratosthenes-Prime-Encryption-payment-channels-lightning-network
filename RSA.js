@@ -1,6 +1,6 @@
 var BigNumber = require('big-number');
 
-//private info
+//private info. prime numbers
 const p = 17
 const q = 19
 
